@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:search/bloc/bitcoin_bloc.dart';
 import 'package:search/repository/bitcoin_repository.dart';
+import 'package:search/widget/load_shimmer.dart';
 import 'bloc/bitcoin_event.dart';
 import 'bloc/bitcoin_state.dart';
 
@@ -68,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         builder: (context, state) {
           if (state is InProgress) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: LoaderShimmer());
           } else if (state is Success) {
             return ListView.builder(
               itemCount: state.list.length,

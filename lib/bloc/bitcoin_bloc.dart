@@ -10,7 +10,8 @@ class BitCoinBloc extends Bloc<BitCoinEvent, BitCoinState> {
   BitCoinBloc(this._bitcoinRepository) : super(Initial()) {
     on<LoadBitCoin>((event, emit) async {
       emit(InProgress());
-
+      // add a delay so that the shimmer effect can be seen
+      await Future.delayed(const Duration(seconds: 4));
       try {
         final bitcoins = await _bitcoinRepository.fetchBitcoins();
         emit(Success(bitcoins));
