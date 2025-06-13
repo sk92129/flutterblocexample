@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _bitcoinBloc = BitCoinBloc(BitcoinRepository());
-    _bitcoinBloc.add(LoadBitCoin());
+    _bitcoinBloc.add(LoadBitCoin()); // where the loading is trim
   }
 
   @override
@@ -71,16 +71,21 @@ class _MyHomePageState extends State<MyHomePage> {
           if (state is InProgress) {
             return Center(child: LoaderShimmer());
           } else if (state is Success) {
-            return ListView.builder(
-              itemCount: state.list.length,
-              itemBuilder: (context, index) {
-                final bitcoin = state.list[index];
-                return ListTile(
-                  leading: Icon(Icons.currency_bitcoin),
-                  title: Text(bitcoin.name),
-                  subtitle: Text('Price: ${bitcoin.priceUsd.toStringAsFixed(2)} USD'),
-                );
+            return RefreshIndicator(
+              onRefresh: () async {
+                _bitcoinBloc.add(LoadBitCoin());
               },
+              child: ListView.builder(
+                itemCount: state.list.length,
+                itemBuilder: (context, index) {
+                  final bitcoin = state.list[index];
+                  return ListTile(
+                    leading: Icon(Icons.currency_bitcoin),
+                    title: Text(bitcoin.name),
+                    subtitle: Text('Price: ${bitcoin.priceUsd.toStringAsFixed(2)} USD'),
+                  );
+                },
+              ),
             );
           } else {
             return Center(child: Text('Press the button to load data.'));
